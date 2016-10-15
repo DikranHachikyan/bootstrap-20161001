@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=yes">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+     <!-- Bootstrap -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/bootstrap-theme.min.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <title>Bootstrap 101 Template</title>
+    <style>
+     .img-responsive{
+      max-height: 200px;
+     }
+    </style>
+  </head>
+  <body>
+    <div>
+      <div class="visible-xs">Extra Small</div>
+      <div class="visible-sm">Small</div>
+      <div class="visible-md">Middle</div>
+      <div class="visible-lg">Large</div>
+    </div>
+
+  
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-sm-12">
+        <h1>My Blog <span class="glyphicon glyphicon-bell"></span></h1>
+      </div>
+    </div>
+    <div id="recent-posts" class="row">
+      
+    </div>
+  </div>
+
+    <div id="template" style="display:none">
+     <article class="col-sm-6 col-md-4">
+       <header>
+          <h4></h4>
+          <img src="" alt="" class="img-thumbnail img-responsive">  
+       </header> 
+       <section>
+         <p></p>
+       </section>
+       <footer>
+          <a href="#" class="btn btn-primary">Read More</a>
+       </footer>
+     </article>
+  </div>
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) 
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    -->
+    <script src="js/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="js/bootstrap.min.js"></script>
+   
+    <script>
+      $(document).ready(function(){
+        console.log('jQuery Ready');
+        var counter=0;
+          $.get( 'http://devise-expert.co.uk/?json=get_recent_posts'
+                , function( data, status){
+                    console.log('status:' + status + ' data:', data);
+                    $.each( data.posts
+                          , function(index,post){
+                          var $article = $('#template article').clone();
+                          //----------- post title -------------------------
+                          $article.find('header h4').html(post.title_plain);    
+                          //----------- post thumbnail ----------------------  
+                          var imageSrc = './pics-large/pic1.jpg';
+                          if( post.thumbnail){
+                            imageSrc = post.thumbnail;
+                          }
+                          $article.find('header img').attr({
+                              'src': imageSrc,
+                              'alt': post.title_plain
+                          });
+                          //-------------- post excerpt ----------------------
+                          var $tmp = $(post.excerpt);
+                          //var rm = $tmp.find('a').remove();
+                          $tmp.find('a').remove();
+                          //console.log(rm.attr('href'));
+                          //console.log($tmp.text());
+                          $article.find('section p').html($tmp.text());  
+
+                          $('#recent-posts').append($article);
+                          counter++;
+
+                          //small devices: 2,4,6,8,10, ....
+                          if( counter != 0 && (counter % 2) == 0){
+                            $('#recent-posts').append('<div class="clearfix visible-sm"></div>');
+                          }  
+                          //middle devices:3,6,9,12, ...
+                          if( counter != 0 && (counter % 3) == 0){
+                            $('#recent-posts').append('<div class="clearfix visible-md visible-lg"></div>');
+                          }
+                    });// for each post in posts
+                }// process recent posts
+          );// get recent posts
+      });//on document ready
+
+    </script>
+  </body>
+</html>

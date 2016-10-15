@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=yes">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>Bootstrap 101 Template</title>
+    <style>
+      ul{ list-style: none; }
+
+      ul li+li{
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <ul id="gallery"></ul>
+    
+    <button id="prv">Previous</button>
+    <button id="nxt">Next</button>
+
+    <div id="item" style="display:none">
+      <li>
+        <h3></h3><a href="#"><img src="" alt=""></a><p></p>
+      </li>  
+    </div>
+
+    <script src="js/jquery.min.js"></script>
+   
+    <script>
+      $(document).ready(function(){
+        console.log('jQuery Ready');
+        var path='./pics-large/';
+
+        console.log('Before $.get()');
+        $.get('./js/pictures-ajax.json', 
+              function(data, status){
+                  console.log('Data:' , data);
+                  $.each( data, function(index,item){
+                      var $li = $('#item li').clone();
+
+                      $li.find('h3').html(item.title);
+                      $li.find('img').attr({
+                          'src': path + item.src,
+                          'alt': item.alr
+                      });
+                      $li.find('a').attr({
+                          'href': item.url,
+                          'title': item.title
+                      });
+                      $li.find('p').html(item.info);
+
+                      $('#gallery').append($li);
+                  }); //for each item in data
+                  console.log('Process data');
+        });//get json data
+        console.log('After $.get()');
+        $('#nxt').click( function(evt){
+            $('#gallery li:first-child').appendTo( $('#gallery'));
+        });//on click next
+
+        $('#prv').click( function(evt){
+            $('#gallery li:last-child').prependTo( $('#gallery'));
+        });//on click next
+        console.log('end of document ready');
+      });//on document ready
+
+    </script>
+  </body>
+</html>
